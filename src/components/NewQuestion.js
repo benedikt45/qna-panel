@@ -21,9 +21,22 @@ class NewQuestion extends Component {
     await this.setState({[target.name]: target.value});
   }
 
+  handleSubmit = async (e) => {
+    e.preventDefault();
+    let response = await fetch('/question/add', {
+      method: 'POST',
+      body: this.state,
+    });
+    if (!response.ok) {
+      throw Error(response.statusText);
+    }
+    let result = await response.json();
+  }
+
+
   render() {
     return (
-        <Form>
+        <Form onSubmit={this.handleSubmit}>
           <Form.Row>
             <Form.Group as={Col} controlId="formQuestion">
               <Form.Label>Вопрос</Form.Label>

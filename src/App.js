@@ -13,7 +13,7 @@ import Topics from "./components/Topics";
 import Navigation from "./components/Navigation";
 import About from "./components/About";
 import NewQuestion from "./components/NewQuestion";
-import QuestionList from "./components/QuestionList.js";
+//import QuestionList from "./components/QuestionList.js";
 
 
 function App() {
@@ -35,9 +35,9 @@ function App() {
             <Route path="/newQuestion">
               <NewQuestion/>
             </Route>
-            <Route path="/questionList">
-              <QuestionList/>
-            </Route>
+            {/*<Route path="/questionList">*/}
+            {/*  <QuestionList/>*/}
+            {/*</Route>*/}
           </Switch>
         </Router>
       </Container>
