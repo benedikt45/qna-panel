@@ -5,12 +5,14 @@ class Topics extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      topics: []
+      topics: [],
+      load: false
     }
   }
 
-  componentDidMount() {
-    fetch('http://localhost:3001/question/topics', {
+  fetchData() {
+    this.setState({load: true})
+    fetch('/question/topics', {
       headers: {
         Authentication: 'Bearer '
       }
@@ -19,8 +21,12 @@ class Topics extends React.Component {
           return response.json()
         })
         .then((topics) => {
-          return this.setState({topics: JSON.parse(topics.Topics)})
+          this.setState({topics: JSON.parse(topics.Topics), load: false})
         });
+  }
+
+  componentDidMount() {
+    this.fetchData();
   }
 
   render() {
@@ -28,9 +34,11 @@ class Topics extends React.Component {
         <ListGroup>
           {
             this.state.topics.map((topic) => {
-              return (<ListGroup.Item>
-                {topic}
-              </ListGroup.Item>)
+              return (
+                  <ListGroup.Item>
+                    {topic}
+                  </ListGroup.Item>
+              )
             })
           }
         </ListGroup>

@@ -8,13 +8,44 @@ class Navigation extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      items:
+      menu:
           [
-            {'type': 'button', 'name': 'О проекте', 'path': '/about'},
-            {'type': 'button', 'name': 'Темы', 'path': '/topics'},
-            {"type": 'dropdown', 'buttons': ["Просмотр", "Добавить"]}
+            {"type": "button", "name": "О проекте", "path": "/about"},
+            {"type": "button", "name": "Темы", "path": "/topics"},
+            {
+              "type": "dropdown", "name": "Действия", "buttons": [
+                {"type": "button", "name": "Просмотр", "path": "/questions"},
+                {"type": "button", "name": "Добавить", "path": "/newQuestion"}
+              ]
+            }
           ]
     }
+  }
+
+  parseItems(array) {
+    return array.map((button) => {
+      if (button["type"] === "button") {
+        return (
+            <Nav.Link>
+              <Link to={button["path"]}> {button["name"]} </Link>
+            </Nav.Link>
+        )
+      } else if (button["type"] === "dropdown") {
+        return (
+            <NavDropdown title={button["name"]}>
+              {
+                button["buttons"].map((button) => {
+                  return (
+                      <NavDropdown.Item>
+                        <Link to={button["path"]}> {button["name"]} </Link>
+                      </NavDropdown.Item>
+                  )
+                })
+              }
+            </NavDropdown>
+        )
+      }
+    })
   }
 
   render() {
@@ -22,31 +53,7 @@ class Navigation extends Component {
         <Navbar bg="light">
           <Navbar.Brand href="#">API</Navbar.Brand>
           <Nav>
-            {
-              this.state.items.map((item) => {
-                if (item["type"] !== 'dropdown') {
-                  return (
-                      <Nav.Link>
-                        <Link to={item["path"]}> {item['name']} </Link>
-                      </Nav.Link>
-                  )
-                } else {
-                  return (
-                      <NavDropdown title="Действия">
-                        {
-                          item["buttons"].map((button) => {
-                            return (
-                                <NavDropdown.Item>
-                                  {button}
-                                </NavDropdown.Item>
-                            )
-                          })
-                        }
-                      </NavDropdown>
-                  )
-                }
-              })
-            }
+            {this.parseItems(this.state.menu)}
           </Nav>
         </Navbar>
     )
