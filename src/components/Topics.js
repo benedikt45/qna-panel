@@ -4,36 +4,13 @@ import React from "react";
 class Topics extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      topics: [],
-      load: false
-    }
-  }
-
-  fetchData() {
-    this.setState({load: true})
-    fetch('/question/topics', {
-      headers: {
-        Authentication: 'Bearer '
-      }
-    })
-        .then((response) => {
-          return response.json()
-        })
-        .then((topics) => {
-          this.setState({topics: JSON.parse(topics.Topics), load: false})
-        });
-  }
-
-  componentDidMount() {
-    this.fetchData();
   }
 
   render() {
     return (
         <ListGroup>
           {
-            this.state.topics.map((topic) => {
+            this.props.topics.map((topic) => {
               return (
                   <ListGroup.Item>
                     {topic}

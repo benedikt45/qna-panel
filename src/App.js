@@ -13,12 +13,57 @@ import Topics from "./components/Topics";
 import Navigation from "./components/Navigation";
 import About from "./components/About";
 import NewQuestion from "./components/NewQuestion";
-//import QuestionList from "./components/QuestionList.js";
+import {useEffect, useState} from "react";
+import QuestionList from "./components/QuestionList.js";
 
 
 function App() {
-  function test() {
 
+  const [topics, setTopics] = useState([]);
+
+  useEffect(() => {
+    if (topics.length === 0) {
+      getTopics().then((result) => {
+        setTopics(result);
+      })
+    }
+  });
+
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    if (topics.length === 0) {
+      setLoading(true)
+    } else {
+      setLoading(false)
+    }
+  }, [topics])
+
+  const [questions, setQuestions] = useState([])
+  useEffect(() => {
+    if (questions.length === 0) {
+      getQuestions().then((result) => {
+        setQuestions(result)
+      })
+    }
+  })
+
+  async function getTopics() {
+    let resp = await fetch('/question/topics', {
+      headers: {
+        Authentication: 'Bearer '
+      }
+    });
+    let result = await resp.json();
+    return result.Topics;
+  }
+
+  async function getQuestions() {
+    let resp = await fetch('/question/all', {
+      headers: {
+        Authentication: 'Bearer '
+      }
+    });
+    return await resp.json();
   }
 
   return (
@@ -30,14 +75,14 @@ function App() {
               <About/>
             </Route>
             <Route path="/topics">
-              <Topics/>
+              <Topics topics={topics}/>
             </Route>
             <Route path="/newQuestion">
-              <NewQuestion/>
+              <NewQuestion topics={topics}/>
             </Route>
-            {/*<Route path="/questionList">*/}
-            {/*  <QuestionList/>*/}
-            {/*</Route>*/}
+            <Route path="/questionList">
+              <QuestionList list={questions}/>
+            </Route>
           </Switch>
         </Router>
       </Container>

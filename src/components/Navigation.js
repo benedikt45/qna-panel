@@ -14,7 +14,7 @@ class Navigation extends Component {
             {"type": "button", "name": "Темы", "path": "/topics"},
             {
               "type": "dropdown", "name": "Действия", "buttons": [
-                {"type": "button", "name": "Просмотр", "path": "/questions"},
+                {"type": "button", "name": "Просмотр", "path": "/questionList"},
                 {"type": "button", "name": "Добавить", "path": "/newQuestion"}
               ]
             }

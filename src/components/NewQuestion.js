@@ -1,8 +1,9 @@
-import {Component} from "react";
+import React, {Component} from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
+import Redirect from "react";
 
 
 class NewQuestion extends Component {
@@ -10,9 +11,10 @@ class NewQuestion extends Component {
     super(props);
 
     this.state = {
-      "question": "",
-      "answer": "",
-      "topic": ""
+      question: "",
+      answer: "",
+      topic: "",
+      send: false,
     };
   }
 
@@ -25,16 +27,24 @@ class NewQuestion extends Component {
     e.preventDefault();
     let response = await fetch('/question/add', {
       method: 'POST',
-      body: this.state,
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8'
+      },
+      body: JSON.stringify({"question": this.state.question, "answer": this.state.answer, "topic": this.state.topic,}),
     });
     if (!response.ok) {
       throw Error(response.statusText);
     }
-    let result = await response.json();
+    await response.json();
+    // this.setState({send: true})
   }
 
 
   render() {
+    // const { send } = this.state;
+    // if (send) {
+    //   return <Redirect to="/about" />
+    // }
     return (
         <Form onSubmit={this.handleSubmit}>
           <Form.Row>
@@ -63,8 +73,13 @@ class NewQuestion extends Component {
                             name="topic"
                             onChange={this.handleOnChange}
               >
-                <option>Choose...</option>
-                <option>...</option>
+                {
+                  this.props.topics.map((item) => {
+                    return (
+                        <option>{item}</option>
+                    )
+                  })
+                }
               </Form.Control>
             </Form.Group>
           </Form.Row>
