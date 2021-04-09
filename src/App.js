@@ -15,55 +15,43 @@ import About from "./components/About";
 import NewQuestion from "./components/NewQuestion";
 import {useEffect, useState} from "react";
 import QuestionList from "./components/QuestionList.js";
+import {returnGetJSON} from "./utils/utils.js"
 
 
 function App() {
 
-  const [topics, setTopics] = useState([]);
-
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
-    if (topics.length === 0) {
-      getTopics().then((result) => {
+    // if (topics.length === 0) {
+      setLoading(true);
+    // } else {
+    //   setLoading(false);
+    // }
+  }, []);
+
+  const [topics, setTopics] = useState([]);
+  useEffect(() => {
+    if (loading) {
+      returnGetJSON('/question/topics').then((result) => {
         setTopics(result);
       })
+      setLoading(false);
     }
-  });
+  }, [loading]);
 
-  const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    if (topics.length === 0) {
-      setLoading(true)
-    } else {
-      setLoading(false)
-    }
-  }, [topics])
 
-  const [questions, setQuestions] = useState([])
+  const [questions, setQuestions] = useState([]);
   useEffect(() => {
-    if (questions.length === 0) {
-      getQuestions().then((result) => {
-        setQuestions(result)
+    if (loading) {
+      returnGetJSON('/question/all').then((result) => {
+        setQuestions(result);
       })
+      setLoading(false);
     }
-  })
+  }, [loading]);
 
-  async function getTopics() {
-    let resp = await fetch('/question/topics', {
-      headers: {
-        Authentication: 'Bearer '
-      }
-    });
-    let result = await resp.json();
-    return result.Topics;
-  }
-
-  async function getQuestions() {
-    let resp = await fetch('/question/all', {
-      headers: {
-        Authentication: 'Bearer '
-      }
-    });
-    return await resp.json();
+  const handleAddNew = () => {
+    setLoading(true);
   }
 
   return (
@@ -71,6 +59,9 @@ function App() {
         <Router>
           <Navigation/>
           <Switch>
+            {/*<Route path="/">*/}
+            {/*  <About/>*/}
+            {/*</Route>*/}
             <Route path="/about">
               <About/>
             </Route>
@@ -78,7 +69,7 @@ function App() {
               <Topics topics={topics}/>
             </Route>
             <Route path="/newQuestion">
-              <NewQuestion topics={topics}/>
+              <NewQuestion topics={topics} handleClick={handleAddNew}/>
             </Route>
             <Route path="/questionList">
               <QuestionList list={questions}/>

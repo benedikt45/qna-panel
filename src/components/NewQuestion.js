@@ -36,6 +36,7 @@ class NewQuestion extends Component {
       throw Error(response.statusText);
     }
     await response.json();
+    this.props.handleClick();
     // this.setState({send: true})
   }
 
