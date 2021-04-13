@@ -1,7 +1,7 @@
 
-function About() {
+function About(props) {
   return (
-      "Это пункт About"
+      props.username + " Это пункт About"
   )
 }
 
