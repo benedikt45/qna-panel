@@ -24,13 +24,12 @@ function Login(props) {
       })
     })
 
-
     if (!response.ok) {
       let text = await response.text();
       return alert("Ошибка входа! "+ text);
     } else {
       let json = await response.json();
-      props.handleLoggedIn(json.username, true);
+      props.handleLoggedIn(true, json.username);
     }
   }
 

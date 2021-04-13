@@ -4,7 +4,8 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
+  Link,
+  Redirect, useRouteMatch
 } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -22,67 +23,46 @@ import Main from "./components/AfterLogin/Main";
 
 function App() {
 
-  const [loggedIn, setLoggedIn] = useState(false);
-  useEffect(async () => {
-    await checkSession();
-  })
-
   const [username, setUsername] = useState("");
+  const [loggedIn, setLoggedIn] = useState(false);
 
-  async function checkSession() {
-    let response = await fetch("/user/login");
-    if (response.ok) {
-      let json = await response.json();
-      setUsername(json.username);
-      setLoggedIn(true);
+  useEffect(() => {
+    async function fetchLoggedIn() {
+      let response = await fetch("/user/login");
+      setLoggedIn(response.ok);
+      if (response.ok) {
+        let username = await response.json();
+        setUsername(username.username);
+      }
     }
-  }
 
-  // const [loading, setLoading] = useState(true);
-  // useEffect(() => {
-  //   // if (topics.length === 0) {
-  //     setLoading(true);
-  //   // } else {
-  //   //   setLoading(false);
-  //   // }
-  // }, []);
-  //
-  // const [topics, setTopics] = useState([]);
-  // useEffect(() => {
-  //   if (loading) {
-  //     returnGetJSON('/question/topics').then((result) => {
-  //       setTopics(result);
-  //     })
-  //     setLoading(false);
-  //   }
-  // }, [loading]);
-  //
-  //
-  // const [questions, setQuestions] = useState([]);
-  // useEffect(() => {
-  //   if (loading) {
-  //     returnGetJSON('/question/all').then((result) => {
-  //       setQuestions(result);
-  //     })
-  //     setLoading(false);
-  //   }
-  // }, [loading]);
-  //
-  // const handleAddNew = () => {
-  //   setLoading(true);
-  // }
+    fetchLoggedIn();
+  },[]);
 
   return (
       <Container>
         <Router>
+          <Switch>
             <Route exact path="/">
-              {loggedIn ? <Main username={username}/> : <Login handleLoggedIn={
+              {loggedIn ? (<Main username={username}/>) : (<Login handleLoggedIn={
                 (username, loggedIn) => {
                   setLoggedIn(loggedIn);
                   setUsername(username);
                 }
-              }/>}
+              }/>)}
+              {/*{loggedIn ? <Redirect to="/main"/> : <Redirect to="/login"/>}*/}
             </Route>
+            <Route path="/main">
+              <Main username={username}/>
+            </Route>
+            <Route path="/login">
+              <Login handleLoggedIn={
+                (username, loggedIn) => {
+                  setLoggedIn(loggedIn);
+                }
+              }/>
+            </Route>
+          </Switch>
         </Router>
       </Container>
   );

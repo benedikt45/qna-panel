@@ -14,7 +14,6 @@ class NewQuestion extends Component {
       question: "",
       answer: "",
       topic: "",
-      send: false,
     };
   }
 
@@ -25,7 +24,7 @@ class NewQuestion extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    let response = await fetch('/question/add', {
+    let response = await fetch('/question/new', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json;charset=utf-8'
@@ -37,15 +36,10 @@ class NewQuestion extends Component {
     }
     await response.json();
     this.props.handleClick();
-    // this.setState({send: true})
   }
 
 
   render() {
-    // const { send } = this.state;
-    // if (send) {
-    //   return <Redirect to="/about" />
-    // }
     return (
         <Form onSubmit={this.handleSubmit}>
           <Form.Row>
