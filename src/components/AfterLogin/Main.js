@@ -14,13 +14,13 @@ function Main(props) {
 
   useEffect(() => {
     async function fetchData() {
-      let responseQ = await fetch("/question/all");
+      let responseQ = await fetch("/api/question/all");
       if (!responseQ.ok) {
         throw new Error(responseQ.statusText);
       }
       let questions = await responseQ.json();
 
-      let responseT = await fetch("/question/topics");
+      let responseT = await fetch("/api/question/topics");
       if (!responseT.ok) {
         throw new Error(responseT.statusText);
       }
@@ -33,7 +33,7 @@ function Main(props) {
     if (needUpdate) {
       fetchData();
     }
-  });
+  }, [needUpdate]);
 
 
   return (
@@ -46,8 +46,8 @@ function Main(props) {
             <QuestionList questions={data.questions}/>
           </Route>
           <Route path={`${path}/new`}>
-            <NewQuestion topics={data.topics} handleClick={() => {
-              setNeedUpdate(true)
+            <NewQuestion topics={data.topics} handleUpdateQuestions={() => {
+              setNeedUpdate(true);
             }}/>
           </Route>
         </Switch>

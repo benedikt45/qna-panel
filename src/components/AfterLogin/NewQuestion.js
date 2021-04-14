@@ -24,7 +24,7 @@ class NewQuestion extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    let response = await fetch('/question/new', {
+    let response = await fetch('/api/question/new', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json;charset=utf-8'
@@ -35,7 +35,7 @@ class NewQuestion extends Component {
       throw Error(response.statusText);
     }
     await response.json();
-    this.props.handleClick();
+    this.props.handleUpdateQuestions();
   }
 
 

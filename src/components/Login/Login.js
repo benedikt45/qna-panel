@@ -4,16 +4,18 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import "./Login.scss";
 import {useState} from "react";
+import { useHistory } from "react-router-dom";
 
 
 function Login(props) {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  let history = useHistory();
 
   async function login(e) {
     e.preventDefault();
-    let response = await fetch("/user/login", {
+    let response = await fetch("/api/user/login", {
       method: "POST",
       headers: {
         'Content-Type': 'application/json;charset=utf-8'
@@ -29,7 +31,9 @@ function Login(props) {
       return alert("Ошибка входа! "+ text);
     } else {
       let json = await response.json();
-      props.handleLoggedIn(true, json.username);
+      props.handleLoggedIn(json.username, true);
+
+      history.push('/main');
     }
   }
 
