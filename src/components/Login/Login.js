@@ -4,14 +4,13 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import "./Login.scss";
 import {useState} from "react";
-import { useHistory } from "react-router-dom";
+import {useHistory} from "react-router-dom";
 
 
 function Login(props) {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  let history = useHistory();
 
   async function login(e) {
     e.preventDefault();
@@ -28,17 +27,15 @@ function Login(props) {
 
     if (!response.ok) {
       let text = await response.text();
-      return alert("Ошибка входа! "+ text);
+      return alert("Ошибка входа! " + text);
     } else {
       let json = await response.json();
       props.handleLoggedIn(json.username, true);
-
-      history.push('/main');
     }
   }
 
   return (
-      <div class="login__wrapper">
+      <div className="login__wrapper">
         <Form className="login__form" onSubmit={login}>
           <FormControl type="text" placeholder="Логин" className=" mr-sm-1" required
                        value={username} onChange={(event) => setUsername(event.target.value)}

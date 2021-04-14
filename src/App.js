@@ -1,21 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  Redirect, useRouteMatch, useHistory
-} from "react-router-dom";
+import {Switch, Route, useHistory, useRouteMatch} from "react-router-dom";
 import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Topics from "./components/Topics";
-import Navigation from "./components/AfterLogin/Navigation";
-import About from "./components/About";
-import NewQuestion from "./components/AfterLogin/NewQuestion";
 import {useEffect, useState} from "react";
-import QuestionList from "./components/AfterLogin/QuestionList.js";
-import {returnGetJSON} from "./utils/utils.js";
 import Login from "./components/Login/Login.js";
 import Main from "./components/AfterLogin/Main";
 
@@ -24,7 +10,29 @@ function App() {
 
   const [username, setUsername] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
+  const [data, setData] = useState({"questions": [], "topics": []});
+  const [updateData, setUpdateData] = useState(false);
   let history = useHistory();
+  let {url, path} = useRouteMatch();
+
+
+  async function fetchData() {
+    let responses = await Promise.all(
+        [fetch("/api/question/all"), fetch("/api/question/topics")]
+    );
+
+    let data = await Promise.all(responses.map((response) => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      return response.json();
+    }));
+
+    setData({"questions": data[0], "topics": data[1]});
+    if (updateData) {
+      setUpdateData(false);
+    }
+  }
 
   useEffect(() => {
     async function fetchLoggedIn() {
@@ -33,19 +41,37 @@ function App() {
       if (response.ok) {
         let username = await response.json();
         setUsername(username.username);
-        return history.push('/main');
+        if (window.location.pathname === "/" || window.location.pathname === "") {
+          return history.push("/main");
+        }
+      } else {
+        history.push("/login");
       }
-      history.push('/login');
     }
 
     fetchLoggedIn();
   }, []);
 
+  useEffect(() => {
+    if (loggedIn) {
+      fetchData();
+    }
+  }, [loggedIn]);
+
+  useEffect(() => {
+    if (updateData) {
+      fetchData();
+      history.push("/main/questions");
+    }
+  }, [updateData]);
+
   return (
       <Container>
         <Switch>
           <Route path="/main">
-            <Main username={username}/>
+            <Main username={username} data={data} handleUpdateData={() => {
+              setUpdateData(true);
+            }}/>
           </Route>
           <Route path="/login">
             <Login handleLoggedIn={

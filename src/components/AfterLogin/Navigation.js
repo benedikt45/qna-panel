@@ -24,11 +24,11 @@ function Navigation(props) {
           <LinkContainer to="/">
             <Navbar.Brand>
               <img
-                  src="logo-2.png"
+                  src={process.env.PUBLIC_URL + "/logo-2.png"}
                   width="30"
                   height="30"
                   className="d-inline-block align-top"
-                  alt="React Bootstrap logo"
+                  alt="Logo"
               />
             </Navbar.Brand>
           </LinkContainer>

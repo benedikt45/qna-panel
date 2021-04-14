@@ -34,8 +34,8 @@ class NewQuestion extends Component {
     if (!response.ok) {
       throw Error(response.statusText);
     }
-    await response.json();
-    this.props.handleUpdateQuestions();
+
+    this.props.handleUpdateData();
   }
 
 
