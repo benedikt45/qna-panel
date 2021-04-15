@@ -13,7 +13,6 @@ function App() {
   const [data, setData] = useState({"questions": [], "topics": []});
   const [updateData, setUpdateData] = useState(false);
   let history = useHistory();
-  let {url, path} = useRouteMatch();
 
 
   async function fetchData() {
@@ -55,6 +54,9 @@ function App() {
   useEffect(() => {
     if (loggedIn) {
       fetchData();
+      if (window.location.pathname === "/" || window.location.pathname === "") {
+        history.push("/main");
+      }
     }
   }, [loggedIn]);
 

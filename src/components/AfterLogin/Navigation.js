@@ -1,22 +1,23 @@
 import Navbar from "react-bootstrap/Navbar";
-import NavDropdown from "react-bootstrap/NavDropdown";
 import Nav from "react-bootstrap/Nav";
-import Button from "react-bootstrap/Button";
-import FormControl from "react-bootstrap/FormControl";
-import Form from "react-bootstrap/Form";
-import {Component} from "react";
 import {LinkContainer} from "react-router-bootstrap";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useRouteMatch
-} from "react-router-dom";
+import {useHistory, useRouteMatch} from "react-router-dom";
+import {Link} from "react-router-dom";
 
 function Navigation(props) {
 
-  let { url } = useRouteMatch();
+  let {url} = useRouteMatch();
+  let history = useHistory();
+
+  async function logout() {
+    let response = await fetch("/api/user/logout", {
+      method: "POST",
+    });
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+    history.push("/login");
+  }
 
   return (
       <>
@@ -42,7 +43,9 @@ function Navigation(props) {
           </Nav>
           <Navbar.Collapse className="justify-content-end">
             <Navbar.Text>
-              Вы вошли как: <span style={{color: "black"}}>{props.children}</span>
+              Вы вошли как: <span style={{color: "black"}}>
+              <Link onClick={logout}>{props.children}</Link>
+            </span>
             </Navbar.Text>
           </Navbar.Collapse>
         </Navbar>

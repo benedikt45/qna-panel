@@ -4,7 +4,6 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import "./Login.scss";
 import {useState} from "react";
-import {useHistory} from "react-router-dom";
 
 
 function Login(props) {

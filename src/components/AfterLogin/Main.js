@@ -1,8 +1,7 @@
 import Navigation from "./Navigation";
-import {BrowserRouter as Router, Route, Switch, useRouteMatch} from "react-router-dom";
+import {Route, Switch, useRouteMatch} from "react-router-dom";
 import QuestionList from "./QuestionList";
 import NewQuestion from "./NewQuestion";
-import {useEffect, useState} from "react";
 
 
 function Main(props) {
@@ -16,7 +15,7 @@ function Main(props) {
         </Navigation>
         <Switch>
           <Route path={`${path}/questions`}>
-            <QuestionList questions={props.data.questions}/>
+            <QuestionList questions={props.data.questions} handleUpdateData={props.handleUpdateData}/>
           </Route>
           <Route path={`${path}/new`}>
             <NewQuestion topics={props.data.topics} handleUpdateData={props.handleUpdateData}/>
