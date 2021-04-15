@@ -16,6 +16,7 @@ function Navigation(props) {
     if (!response.ok) {
       throw new Error(response.statusText);
     }
+    props.handleLogout();
     history.push("/login");
   }
 

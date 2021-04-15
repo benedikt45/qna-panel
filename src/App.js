@@ -4,6 +4,7 @@ import Container from "react-bootstrap/Container";
 import {useEffect, useState} from "react";
 import Login from "./components/Login/Login.js";
 import Main from "./components/AfterLogin/Main";
+import NotFound from "./components/AfterLogin/NotFound";
 
 
 function App() {
@@ -54,7 +55,8 @@ function App() {
   useEffect(() => {
     if (loggedIn) {
       fetchData();
-      if (window.location.pathname === "/" || window.location.pathname === "") {
+      if (window.location.pathname === "/" || window.location.pathname === ""
+          || window.location.pathname === "/login") {
         history.push("/main");
       }
     }
@@ -71,9 +73,14 @@ function App() {
       <Container>
         <Switch>
           <Route path="/main">
-            <Main username={username} data={data} handleUpdateData={() => {
-              setUpdateData(true);
-            }}/>
+            <Main username={username} data={data}
+                  handleUpdateData={() => {
+                    setUpdateData(true);
+                  }}
+                  handleLogout={() => {
+                    setLoggedIn(false);
+                    setUsername("");
+                  }}/>
           </Route>
           <Route path="/login">
             <Login handleLoggedIn={
@@ -82,6 +89,9 @@ function App() {
                 setUsername(username);
               }
             }/>
+          </Route>
+          <Route exact={true} path="*">
+            <NotFound />
           </Route>
         </Switch>
       </Container>
